@@ -7,7 +7,7 @@ def best_first_search(graph, start, goal, h):
 
     while pq:
         _, current = heapq.heappop(pq)
-
+        
         if current == goal:
             path = []
             while current:

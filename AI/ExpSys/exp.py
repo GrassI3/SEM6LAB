@@ -45,7 +45,6 @@ tree = {
     }
 }
 
-
 def ask(q):
     while True:
         ans = input(f"Do you observe {q}? (y/n): ").lower()

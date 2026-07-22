@@ -4,7 +4,7 @@ def astar(graph, h, start, goal):
     pq = [(h[start], 0, start)]      # (f, g, node)
     parent = {start: None}
     visited = set()
-
+    
     while pq:
         f, g, node = heapq.heappop(pq)
 
@@ -64,3 +64,10 @@ path, cost = astar(graph, h, start, goal)
 
 print("\nPath :", " -> ".join(path))
 print("Cost :", cost)
+
+# for neigh, cost in graph[node]:
+#     new_g = g + cost 
+#     if neigh not in g_cost or new_g < g_cost[neigh]:
+#         g_cost[neigh] = new_g
+#         parent[neigh] = node
+#         heapq.heappush(pq, (new_g + h[neigh], new_g, neigh))

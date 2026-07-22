@@ -10,39 +10,29 @@ def is_valid_state(m, c):
 def solve_missionaries_and_cannibals():
     start = (3, 3, 1)
     goal = (0, 0, 0)
-
     moves = [(1,0), (2,0), (0,1), (0,2), (1,1)]
 
-    queue = deque([(start, [start], [])])
+    queue = deque([(start, [start])])
     visited = {start}
 
     while queue:
-        (m, c, boat), path, actions = queue.popleft()
-
+        (m, c, boat), path = queue.popleft()
         if (m, c, boat) == goal:
             print("--- OPTIMAL SOLUTION FOUND ---")
             print("Format: (Missionaries on Left, Cannibals on Left, Boat Position)")
-
-            print(f"Start : {path[0]}")
-
-            for i, action in enumerate(actions):
-                lm, lc, b = path[i + 1]
-                print(f"Step {i+1}: {action.ljust(22)} -> State: ({lm}, {lc}, {'L' if b else 'R'})")
-
-            print(f"\nTotal steps: {len(actions)}")
+            for i in range(len(path)):
+                print(f"{path[i]}")
+            print(f"\nTotal steps: {len(path)-1}")
             return
-
         for dm, dc in moves:
             if boat:
                 new_state = (m - dm, c - dc, 0)
-                action = f"Move {dm}M, {dc}C Right"
             else:
                 new_state = (m + dm, c + dc, 1)
-                action = f"Move {dm}M, {dc}C Left"
 
             if is_valid_state(new_state[0], new_state[1]) and new_state not in visited:
                 visited.add(new_state)
-                queue.append((new_state, path + [new_state], actions + [action]))
+                queue.append((new_state, path + [new_state]))
 
     print("No solution found.")
 

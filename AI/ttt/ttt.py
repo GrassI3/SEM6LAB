@@ -41,15 +41,11 @@ board = [" "] * 9
 while winner(board) is None:
     for i in range(0,9,3):
         print(" | ".join(board[i:i+3]))
-
     board[int(input("Move (1-9): ")) - 1] = "X"
-
     if winner(board):
         break
-
     board[ai_move(board)] = "O"
 
 for i in range(0,9,3):
     print(" | ".join(board[i:i+3]))
-
 print("Winner:", winner(board))

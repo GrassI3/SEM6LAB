@@ -4,7 +4,7 @@ def alphabeta(node, alpha, beta, depth):
     if node not in tree or not tree[node]:
         print("  " * depth + f"{node} = {value[node]}")
         return value[node]
-
+    
     if depth % 2 == 0:          # MAX
         print("  " * depth + f"MAX {node}")
         best = -math.inf

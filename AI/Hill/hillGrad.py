@@ -1,7 +1,7 @@
 def hill_climbing(graph, start, h):
     current = start
     path = [current]
-
+    
     while True:
         next_node = None
         for node in graph.get(current, []):

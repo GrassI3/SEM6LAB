@@ -8,8 +8,7 @@ def bfs(graph, start):
         node = queue.popleft()
         if node not in visited:
             visited.append(node)
-            for n in graph[node]:
-                queue.append(n)
+            queue.extend(graph[node])
     return visited
 
 graph = {}
