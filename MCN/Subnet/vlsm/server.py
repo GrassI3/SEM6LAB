@@ -1,49 +1,49 @@
 import socket
 import math
 
-def ip_to_int(ip_str):
-    octets = list(map(int, ip_str.split(".")))
-    return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]
+def ip_to_int(ip):
+    a, b, c, d = map(int, ip.split("."))
+    return (a << 24) | (b << 16) | (c << 8) | d
 
-def int_to_ip(ip_int):
-    return f"{(ip_int >> 24) & 255}.{(ip_int >> 16) & 255}.{(ip_int >> 8) & 255}.{ip_int & 255}"
+def int_to_ip(n):
+    return f"{(n>>24)&255}.{(n>>16)&255}.{(n>>8)&255}.{n&255}"
 
 server = socket.socket()
 server.bind(("localhost", 5000))
 server.listen(1)
 
-print("Server waiting...")
+print("Server Waiting...")
 
 conn, addr = server.accept()
-print("Connected to", addr)
 
-lines = conn.recv(4096).decode().splitlines()
+data = conn.recv(4096).decode().splitlines()
 
-base_ip = lines[0]
-n = int(lines[1])
-hosts = list(map(int, lines[2:]))
+base_ip = data[0]
+n = int(data[1])
+hosts = list(map(int, data[2:]))
 
 hosts.sort(reverse=True)
 
-current_ip_int = ip_to_int(base_ip)
+current = ip_to_int(base_ip)
 
-result = "--- Proper VLSM Allocation Table ---\n\n"
+result = ""
 
-for req in hosts:
-    size = 2 ** math.ceil(math.log2(req + 2))
+for h in hosts:
+    size = 2 ** math.ceil(math.log2(h + 2))
     cidr = 32 - int(math.log2(size))
 
+    network = current
+    broadcast = current + size - 1
     mask = (0xFFFFFFFF << (32 - cidr)) & 0xFFFFFFFF
-    broadcast = current_ip_int + size - 1
 
-    result += f"Subnet (Req: {req} hosts)\n"
-    result += f"Network:   {int_to_ip(current_ip_int)}/{cidr}\n"
-    result += f"Mask:      {int_to_ip(mask)}\n"
-    result += f"First IP:  {int_to_ip(current_ip_int + 1)}\n"
-    result += f"Last IP:   {int_to_ip(broadcast - 1)}\n"
+    result += f"Hosts: {h}\n"
+    result += f"Network: {int_to_ip(network)}/{cidr}\n"
+    result += f"Mask: {int_to_ip(mask)}\n"
+    result += f"First IP: {int_to_ip(network + 1)}\n"
+    result += f"Last IP: {int_to_ip(broadcast - 1)}\n"
     result += f"Broadcast: {int_to_ip(broadcast)}\n\n"
 
-    current_ip_int += size
+    current += size
 
 conn.send(result.encode())
 
